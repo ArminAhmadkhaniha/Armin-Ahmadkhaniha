@@ -14,6 +14,12 @@ import torch
 
 class QuantumGCN(torch.nn.Module):
     def __init__(self, n_qubits, n_classes=2):
+        """
+        Initializes the QuantumGCN model.
+        Args:
+            n_qubits (int): Number of qubits in the quantum circuit.
+            n_classes (int): Number of output classes.
+        """
         super().__init__()
         self.q_feature = quantum_net(n_qubits, 1, 256)[0]
         self.fc = torch.nn.Linear(n_qubits, n_classes)
