@@ -7,13 +7,32 @@ Original file is located at
     https://colab.research.google.com/drive/1v3fWWBoUCwvZsyIy7Mmlyd4mmMeaQF2R
 """
 
+import random
+import numpy as np
 import torch
 from model import QuantumGCN
 from data_prep import cora_dataset_preparation
+from tqdm import tqdm
 
 
+def set_seed(seed=42):
+    # NumPy
+    np.random.seed(seed)
+    
+    # Python Random
+    random.seed(seed)
+    
+    # PyTorch
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    
+    # Ensure deterministic algorithms
+    torch.use_deterministic_algorithms(True)
 
-train_loader, test_loader, A_norm = cora_dataset_preparation()
+set_seed(53)
+
+train_loader, test_loader, A_norm, len_test_dataset = cora_dataset_preparation()
 
 device = torch.device("cpu")
 model = QuantumGCN(8).to(device)
@@ -47,7 +66,7 @@ for epoch in range(60):
             out = model(batch_x, A_norm)
             pred = out.argmax(dim=1)
             correct += (pred == batch_y).sum().item()
-    accuracy = correct / test_dataset.__len__()
+    accuracy = correct / len_test_dataset
     test_accuracies.append(accuracy)
 
     if epoch % 1 == 0:

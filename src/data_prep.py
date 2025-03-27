@@ -83,4 +83,4 @@ def cora_dataset_preparation():
    A = A + torch.eye(A.shape[0])  # Add self-loops
    D_inv_sqrt = torch.diag(1.0 / torch.sqrt(A.sum(dim=1)))
    A_norm = D_inv_sqrt @ A @ D_inv_sqrt  # Symmetric normalization
-   return train_loader, test_loader, A_norm
+   return train_loader, test_loader, A_norm, len(test_dataset)
